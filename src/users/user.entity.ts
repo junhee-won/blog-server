@@ -12,5 +12,5 @@ export class User {
   password: string;
 
   @Column()
-  user_type: boolean;
+  user_type: string;
 }
