@@ -11,20 +11,9 @@ export class UsersService {
     private usersRepository: Repository<User>,
   ) {}
 
-  findAll(): Promise<User[]> {
-    return this.usersRepository.find();
+  async findOne(user_id: string): Promise<User> {
+    return this.usersRepository.findOneBy({
+      user_id: user_id,
+    });
   }
-
-  findOne(id: number): Promise<User> {
-    return this.usersRepository.findOneBy({ id });
-  }
-
-  create(createUserDto: CreateUserDto) {
-    const user = this.usersRepository.create(createUserDto);
-    this.usersRepository.save(user);
-  }
-
-  // async remove(id: string): Promise<void> {
-  //   await this.usersRepository.delete(id);
-  // }
 }
