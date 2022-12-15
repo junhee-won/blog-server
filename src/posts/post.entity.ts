@@ -18,7 +18,7 @@ export class Post {
   content: string;
 
   @Column()
-  public: boolean;
+  public: number;
 
   @Column()
   category_id: number;

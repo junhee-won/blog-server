@@ -1,6 +1,6 @@
 export class CreatePostDto {
   title: string;
   content: string;
-  public: boolean;
+  public: number;
   category_id: number;
 }
