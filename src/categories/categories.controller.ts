@@ -10,7 +10,7 @@ import {
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { CategoriesService } from './categories.service';
 
-@Controller('post')
+@Controller('category')
 export class CategoriesController {
   constructor(private readonly categoriesService: CategoriesService) {}
 }
