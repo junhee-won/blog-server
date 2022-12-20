@@ -9,4 +9,11 @@ export class CategoriesService {
     @InjectRepository(Category)
     private categoriesRepository: Repository<Category>,
   ) {}
+
+  async getAll() {
+    const categories = await this.categoriesRepository.findBy({
+      public: 1,
+    });
+    return categories;
+  }
 }
