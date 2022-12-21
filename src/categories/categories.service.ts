@@ -16,4 +16,11 @@ export class CategoriesService {
     });
     return categories;
   }
+
+  async getById(id: number) {
+    const category = await this.categoriesRepository.findOneBy({
+      id: id,
+    });
+    return category.name;
+  }
 }

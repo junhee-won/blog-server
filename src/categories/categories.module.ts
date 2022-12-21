@@ -10,5 +10,6 @@ import { Category } from './category.entity';
   imports: [TypeOrmModule.forFeature([Category])],
   controllers: [CategoriesController, CategoriesManageController],
   providers: [CategoriesService, CategoriesManageService],
+  exports: [CategoriesService],
 })
 export class CategoriesModule {}

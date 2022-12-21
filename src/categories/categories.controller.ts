@@ -1,13 +1,4 @@
-import {
-  Controller,
-  UseGuards,
-  Body,
-  Param,
-  Get,
-  Post,
-  Put,
-} from '@nestjs/common';
-import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { Controller, Get } from '@nestjs/common';
 import { CategoriesService } from './categories.service';
 
 @Controller('category')
