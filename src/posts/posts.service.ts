@@ -24,7 +24,7 @@ export class PostsService {
     const posts = await this.postsRepository.findBy({
       public: 1,
     });
-    posts.splice(5);
+    posts.splice(6);
     const _posts: PostAddedCategory[] = await Promise.all(
       posts.map(async (post) => {
         const category: string = await this.categoriesService.getById(
