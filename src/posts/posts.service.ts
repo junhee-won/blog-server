@@ -33,27 +33,16 @@ export class PostsService {
       public: 1,
     });
     posts.splice(6);
-    const _posts: PostAddedCategory[] = await Promise.all(
+    const _posts = await Promise.all(
       posts.map(async (post) => {
         const category: string = await this.categoriesService.getById(
           post.category_id,
         );
 
-        const _post: PostAddedCategory = { ...post, category: category };
+        const _post = { ...post, category: category };
         return _post;
       }),
     );
     return _posts;
   }
-}
-
-interface PostAddedCategory {
-  id: number;
-  created_at: string;
-  updated_at: string;
-  title: string;
-  content: string;
-  public: number;
-  category_id: number;
-  category: string;
 }
