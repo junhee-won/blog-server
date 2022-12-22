@@ -17,7 +17,15 @@ export class PostsService {
     const post = await this.postsRepository.findOneBy({ id: id });
     if (!post || post?.public === 0)
       throw new HttpException('no post', HttpStatus.BAD_REQUEST);
-    return post;
+
+    const category = await this.categoriesService.getById(post.category_id);
+    const created_at = new Date(post.created_at).toISOString().split('T')[0];
+    return {
+      title: post.title,
+      content: post.content,
+      created_at,
+      category,
+    };
   }
 
   async getNew() {
