@@ -13,9 +13,8 @@ export class AppController {
     return await this.authService.login(req.user);
   }
 
-  @UseGuards(JwtAuthGuard)
-  @Get('test')
-  getProfile(@Request() req) {
-    return req.user;
+  @Get('/')
+  healthCheck() {
+    return 'health check';
   }
 }
