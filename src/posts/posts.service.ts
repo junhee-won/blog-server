@@ -38,11 +38,19 @@ export class PostsService {
         const category: string = await this.categoriesService.getById(
           post.category_id,
         );
-
-        const _post = { ...post, category: category };
+        const created_at: string = new Date(post.created_at)
+          .toISOString()
+          .split('T')[0];
+        const _post = {
+          id: post.id,
+          title: post.title,
+          category,
+          created_at,
+        };
         return _post;
       }),
     );
+    console.log(_posts);
     return _posts;
   }
 }
