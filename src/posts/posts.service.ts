@@ -50,7 +50,6 @@ export class PostsService {
         return _post;
       }),
     );
-    console.log(_posts);
     return _posts;
   }
 }
