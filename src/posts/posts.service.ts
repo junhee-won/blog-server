@@ -1,4 +1,10 @@
-import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
+import {
+  Injectable,
+  HttpException,
+  HttpStatus,
+  Inject,
+  forwardRef,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Post } from './post.entity';
@@ -10,6 +16,7 @@ export class PostsService {
     @InjectRepository(Post)
     private postsRepository: Repository<Post>,
 
+    @Inject(forwardRef(() => CategoriesService))
     private readonly categoriesService: CategoriesService,
   ) {}
 
@@ -51,5 +58,14 @@ export class PostsService {
       }),
     );
     return _posts;
+  }
+
+  async getByCategoryid(categoryId: number) {
+    const posts = await this.postsRepository.findBy({
+      category_id: categoryId,
+      public: 1,
+    });
+
+    return posts;
   }
 }

@@ -1,13 +1,17 @@
-import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
+import { Injectable, Inject, forwardRef } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Category } from './category.entity';
+import { PostsService } from 'src/posts/posts.service';
 
 @Injectable()
 export class CategoriesService {
   constructor(
     @InjectRepository(Category)
     private categoriesRepository: Repository<Category>,
+
+    @Inject(forwardRef(() => PostsService))
+    private readonly postsService: PostsService,
   ) {}
 
   async getAll() {
@@ -52,6 +56,35 @@ export class CategoriesService {
       });
       return `${parentCategory.name} / ${category.name}`;
     }
+  }
+
+  async getPosts(id: number) {
+    const posts = await this.postsService.getByCategoryid(id);
+    const childrenCategories = await this.categoriesRepository.findBy({
+      parent_category_id: id,
+    });
+    await Promise.all(
+      childrenCategories.map(async (childCategory) => {
+        const childPosts = await this.postsService.getByCategoryid(
+          childCategory.id,
+        );
+        childPosts.map((childPosts) => posts.push(childPosts));
+      }),
+    );
+    posts.sort(function (a, b) {
+      return a.created_at.localeCompare(b.created_at);
+    });
+
+    return posts.map((post) => {
+      const created_at: string = new Date(post.created_at)
+        .toISOString()
+        .split('T')[0];
+      return {
+        id: post.id,
+        title: post.title,
+        created_at,
+      };
+    });
   }
 
   sortCategory(a: Category, b: Category) {
