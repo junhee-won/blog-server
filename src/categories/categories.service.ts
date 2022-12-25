@@ -2,6 +2,7 @@ import { Injectable, Inject, forwardRef } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Category } from './category.entity';
+import { Post } from 'src/posts/post.entity';
 import { PostsService } from 'src/posts/posts.service';
 
 @Injectable()
@@ -20,7 +21,7 @@ export class CategoriesService {
       public: 1,
       parent_category_id: 0,
     });
-    parentCategories.sort(this.sortCategory);
+    parentCategories.sort(this.sortCategoryByPriority);
     await Promise.all(
       parentCategories.map(async (parentCategory) => {
         const item = {
@@ -32,7 +33,7 @@ export class CategoriesService {
           public: 1,
           parent_category_id: parentCategory.id,
         });
-        childrenCategories.sort(this.sortCategory);
+        childrenCategories.sort(this.sortCategoryByPriority);
         childrenCategories.map((childrenCategory) => {
           item.children.push({
             id: childrenCategory.id,
@@ -71,9 +72,8 @@ export class CategoriesService {
         childPosts.map((childPosts) => posts.push(childPosts));
       }),
     );
-    posts.sort(function (a, b) {
-      return a.created_at.localeCompare(b.created_at);
-    });
+
+    posts.sort(this.sortPostByCreatedAt);
 
     return posts.map((post) => {
       const created_at: string = new Date(post.created_at)
@@ -87,7 +87,11 @@ export class CategoriesService {
     });
   }
 
-  sortCategory(a: Category, b: Category) {
+  sortCategoryByPriority(a: Category, b: Category) {
     return a.priority - b.priority;
+  }
+
+  sortPostByCreatedAt(a: Post, b: Post): number {
+    return new Date(a.created_at) < new Date(b.created_at) ? -1 : 1;
   }
 }
