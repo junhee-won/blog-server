@@ -22,4 +22,7 @@ export class Post {
 
   @Column()
   category_id: number;
+
+  @Column()
+  thumbnail: string;
 }

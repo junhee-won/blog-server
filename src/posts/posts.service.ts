@@ -6,9 +6,11 @@ import {
   forwardRef,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { In, Repository } from 'typeorm';
 import { Post } from './post.entity';
 import { CategoriesService } from 'src/categories/categories.service';
+import { PostSummary } from './interface';
+import { PostPage } from './interface';
 
 @Injectable()
 export class PostsService {
@@ -21,25 +23,38 @@ export class PostsService {
   ) {}
 
   async getById(id: number) {
-    const post = await this.postsRepository.findOneBy({ id: id });
+    const post = await this.postsRepository.findOne({
+      select: {
+        created_at: true,
+        title: true,
+        content: true,
+        category_id: true,
+      },
+      where: { id: id },
+    });
     if (!post || post?.public === 0)
-      throw new HttpException('no post', HttpStatus.BAD_REQUEST);
+      throw new HttpException('no post', HttpStatus.NOT_FOUND);
 
     const category = await this.categoriesService.getById(post.category_id);
     const created_at = new Date(post.created_at).toISOString().split('T')[0];
-    return {
-      title: post.title,
-      content: post.content,
-      created_at,
-      category,
-    };
+    const _post: PostPage = { ...post, created_at, category };
+    return _post;
   }
 
   async getNew() {
-    const posts = await this.postsRepository.findBy({
-      public: 1,
+    const posts = await this.postsRepository.find({
+      select: {
+        id: true,
+        created_at: true,
+        title: true,
+        thumbnail: true,
+        category_id: true,
+      },
+      where: { public: 1 },
+      order: { created_at: 'DESC' },
     });
     posts.splice(6);
+
     const _posts = await Promise.all(
       posts.map(async (post) => {
         const category: string = await this.categoriesService.getById(
@@ -48,24 +63,19 @@ export class PostsService {
         const created_at: string = new Date(post.created_at)
           .toISOString()
           .split('T')[0];
-        const _post = {
-          id: post.id,
-          title: post.title,
-          category,
-          created_at,
-        };
+        const _post: PostSummary = { ...post, category, created_at };
         return _post;
       }),
     );
     return _posts;
   }
 
-  async getByCategoryid(categoryId: number) {
-    const posts = await this.postsRepository.findBy({
-      category_id: categoryId,
-      public: 1,
+  async getByCategoryIds(categoryIds: number[]) {
+    const posts = await this.postsRepository.find({
+      select: { id: true, created_at: true, title: true, thumbnail: true },
+      where: { category_id: In(categoryIds), public: 1 },
+      order: { created_at: 'DESC', id: 'DESC' },
     });
-
     return posts;
   }
 }

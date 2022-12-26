@@ -4,4 +4,5 @@ export class UpdatePostDto {
   content?: string;
   public?: number;
   category_id?: number;
+  thumbnail: string;
 }

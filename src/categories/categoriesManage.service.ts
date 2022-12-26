@@ -34,7 +34,7 @@ export class CategoriesManageService {
     const _category = { ...category, ...updateCategoryDto };
 
     if (!_category.name || (_category.public !== 0 && _category.public !== 1))
-      throw new HttpException('no category', HttpStatus.BAD_REQUEST);
+      throw new HttpException('bad category', HttpStatus.BAD_REQUEST);
 
     try {
       return await this.categoriesRepository.save(_category);
