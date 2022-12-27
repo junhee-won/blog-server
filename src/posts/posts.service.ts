@@ -51,7 +51,7 @@ export class PostsService {
         category_id: true,
       },
       where: { public: 1 },
-      order: { created_at: 'DESC' },
+      order: { created_at: 'DESC', id: 'DESC' },
     });
     posts.splice(6);
 
