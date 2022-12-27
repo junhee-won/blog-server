@@ -8,7 +8,9 @@ import { PostsModule } from './posts/posts.module';
 import { CategoriesModule } from './categories/categories.module';
 import { User } from './users/user.entity';
 import { Post } from './posts/post.entity';
+import { Stats } from './stats/stats.entity';
 import { Category } from './categories/category.entity';
+import { StatsModule } from './stats/stats.module';
 
 @Module({
   imports: [
@@ -20,13 +22,14 @@ import { Category } from './categories/category.entity';
       username: process.env.DATABASE_USERNAME,
       password: process.env.DATABASE_PASSWORD,
       database: process.env.DATABASE_DATABASE,
-      entities: [User, Post, Category],
+      entities: [User, Post, Category, Stats],
       synchronize: false,
     }),
     AuthModule,
     UsersModule,
     PostsModule,
     CategoriesModule,
+    StatsModule,
   ],
   controllers: [AppController],
 })
