@@ -6,11 +6,11 @@ import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
 import { PostsModule } from './posts/posts.module';
 import { CategoriesModule } from './categories/categories.module';
+import { ViewsModule } from './views/views.module';
 import { User } from './users/user.entity';
 import { Post } from './posts/post.entity';
-import { Stats } from './stats/stats.entity';
 import { Category } from './categories/category.entity';
-import { StatsModule } from './stats/stats.module';
+import { View } from './views/view.entity';
 
 @Module({
   imports: [
@@ -22,14 +22,14 @@ import { StatsModule } from './stats/stats.module';
       username: process.env.DATABASE_USERNAME,
       password: process.env.DATABASE_PASSWORD,
       database: process.env.DATABASE_DATABASE,
-      entities: [User, Post, Category, Stats],
+      entities: [User, Post, Category, View],
       synchronize: false,
     }),
     AuthModule,
     UsersModule,
     PostsModule,
     CategoriesModule,
-    StatsModule,
+    ViewsModule,
   ],
   controllers: [AppController],
 })
