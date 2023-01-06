@@ -30,10 +30,12 @@ export class PostsService {
         content: true,
         category_id: true,
       },
-      where: { id: id },
+      where: {
+        id: id,
+        public: 1,
+      },
     });
-    if (!post || post?.public === 0)
-      throw new HttpException('no post', HttpStatus.NOT_FOUND);
+    if (!post) throw new HttpException('no post', HttpStatus.NOT_FOUND);
 
     const category = await this.categoriesService.getById(post.category_id);
     const created_at = new Date(post.created_at).toISOString().split('T')[0];
