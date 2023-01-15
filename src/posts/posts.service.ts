@@ -72,6 +72,17 @@ export class PostsService {
     return _posts;
   }
 
+  async getAll() {
+    const posts = await this.postsRepository.find({
+      select: {
+        id: true,
+      },
+      where: { public: 1 },
+      order: { created_at: 'DESC', id: 'DESC' },
+    });
+    return posts;
+  }
+
   async getByCategoryIds(categoryIds: number[]) {
     const posts = await this.postsRepository.find({
       select: { id: true, created_at: true, title: true, thumbnail: true },

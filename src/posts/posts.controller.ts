@@ -11,6 +11,11 @@ export class PostsController {
     return await this.postsService.getNew();
   }
 
+  @Get('all')
+  async getAll(): Promise<any[]> {
+    return await this.postsService.getAll();
+  }
+
   @Get(':id')
   async getById(@Param('id') id: number): Promise<PostPage> {
     return await this.postsService.getById(id);
