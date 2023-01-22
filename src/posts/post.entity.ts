@@ -1,4 +1,4 @@
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity()
 export class Post {
@@ -18,7 +18,7 @@ export class Post {
   content: string;
 
   @Column()
-  public: number;
+  public: 1 | 0;
 
   @Column()
   category_id: number;

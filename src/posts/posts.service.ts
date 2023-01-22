@@ -4,13 +4,14 @@ import {
   HttpStatus,
   Inject,
   forwardRef,
-} from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { In, Repository } from 'typeorm';
-import { Post } from './post.entity';
-import { CategoriesService } from 'src/categories/categories.service';
-import { PostSummary } from './interface';
-import { PostPage } from './interface';
+} from "@nestjs/common";
+import { InjectRepository } from "@nestjs/typeorm";
+import { In, Repository } from "typeorm";
+import { Post } from "./post.entity";
+import { CategoriesService } from "src/categories/categories.service";
+import { PostSummary } from "./post.interface";
+import { PostPage } from "./post.interface";
+import { convertDateDBToClient } from "src/module/dateConverter";
 
 @Injectable()
 export class PostsService {
@@ -35,12 +36,13 @@ export class PostsService {
         public: 1,
       },
     });
-    if (!post) throw new HttpException('no post', HttpStatus.NOT_FOUND);
+    if (!post) throw new HttpException("no post", HttpStatus.NOT_FOUND);
 
     const category = await this.categoriesService.getById(post.category_id);
-    const created_at = new Date(post.created_at).toISOString().split('T')[0];
-    const _post: PostPage = { ...post, created_at, category };
-    return _post;
+    const created_at = convertDateDBToClient(post.created_at);
+    const { category_id, ..._post } = post;
+    const postPage: PostPage = { ..._post, created_at, category };
+    return postPage;
   }
 
   async getNew() {
@@ -53,7 +55,7 @@ export class PostsService {
         category_id: true,
       },
       where: { public: 1 },
-      order: { created_at: 'DESC', id: 'DESC' },
+      order: { created_at: "DESC", id: "DESC" },
     });
     posts.splice(6);
 
@@ -62,9 +64,7 @@ export class PostsService {
         const category: string = await this.categoriesService.getById(
           post.category_id,
         );
-        const created_at: string = new Date(post.created_at)
-          .toISOString()
-          .split('T')[0];
+        const created_at: string = convertDateDBToClient(post.created_at);
         const _post: PostSummary = { ...post, category, created_at };
         return _post;
       }),
@@ -78,7 +78,7 @@ export class PostsService {
         id: true,
       },
       where: { public: 1 },
-      order: { created_at: 'DESC', id: 'DESC' },
+      order: { created_at: "DESC", id: "DESC" },
     });
     return posts;
   }
@@ -87,7 +87,7 @@ export class PostsService {
     const posts = await this.postsRepository.find({
       select: { id: true, created_at: true, title: true, thumbnail: true },
       where: { category_id: In(categoryIds), public: 1 },
-      order: { created_at: 'DESC', id: 'DESC' },
+      order: { created_at: "DESC", id: "DESC" },
     });
     return posts;
   }

@@ -1,9 +1,10 @@
-import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
-import { Post } from './post.entity';
-import { CreatePostDto } from './dto/create-post.dto';
-import { UpdatePostDto } from './dto/update-post.dto';
+import { Injectable, HttpException, HttpStatus } from "@nestjs/common";
+import { InjectRepository } from "@nestjs/typeorm";
+import { Repository } from "typeorm";
+import { Post } from "./post.entity";
+import { CreatePostDto } from "./dto/create-post.dto";
+import { UpdatePostDto } from "./dto/update-post.dto";
+import { createDateDB } from "src/module/dateConverter";
 
 @Injectable()
 export class PostsManageService {
@@ -14,17 +15,22 @@ export class PostsManageService {
 
   async create(createPostDto: CreatePostDto) {
     if (!createPostDto.title)
-      throw new HttpException('no title', HttpStatus.BAD_REQUEST);
+      throw new HttpException("no title", HttpStatus.BAD_REQUEST);
     if (!createPostDto.content)
-      throw new HttpException('no content', HttpStatus.BAD_REQUEST);
+      throw new HttpException("no content", HttpStatus.BAD_REQUEST);
     if (createPostDto.public !== 0 && createPostDto.public !== 1)
-      throw new HttpException('no public', HttpStatus.BAD_REQUEST);
+      throw new HttpException("no public", HttpStatus.BAD_REQUEST);
     if (!createPostDto.category_id)
-      throw new HttpException('no category_id', HttpStatus.BAD_REQUEST);
+      throw new HttpException("no category_id", HttpStatus.BAD_REQUEST);
 
     try {
-      const post = this.postsRepository.create(createPostDto);
-      return await this.postsRepository.save(post);
+      const currentTime = createDateDB();
+      const post = this.postsRepository.create({
+        ...createPostDto,
+        created_at: currentTime,
+        updated_at: currentTime,
+      });
+      return await this.postsRepository.insert(post);
     } catch (error) {
       throw error;
     }
@@ -44,10 +50,14 @@ export class PostsManageService {
       (_post.public !== 0 && _post.public !== 1) ||
       !_post.category_id
     )
-      throw new HttpException('no post', HttpStatus.BAD_REQUEST);
+      throw new HttpException("no post", HttpStatus.BAD_REQUEST);
 
     try {
-      return await this.postsRepository.save(_post);
+      const currentTime = createDateDB();
+      return await this.postsRepository.save({
+        ..._post,
+        updated_at: currentTime,
+      });
     } catch (error) {
       throw error;
     }
