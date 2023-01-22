@@ -1,8 +1,8 @@
-import { Controller, Body, Get, Post } from '@nestjs/common';
-import { ViewsService } from './views.service';
-import { AddViewDto } from './dto/add-view.dto';
+import { Controller, Body, Get, Post } from "@nestjs/common";
+import { ViewsService } from "./views.service";
+import { AddViewDto } from "./dto/add-view.dto";
 
-@Controller('view')
+@Controller("view")
 export class ViewsController {
   constructor(private readonly viewsService: ViewsService) {}
 

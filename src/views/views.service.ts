@@ -1,8 +1,8 @@
-import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, In } from 'typeorm';
-import { View } from './view.entity';
-import { AddViewDto } from './dto/add-view.dto';
+import { Injectable, HttpException, HttpStatus } from "@nestjs/common";
+import { InjectRepository } from "@nestjs/typeorm";
+import { Repository, In } from "typeorm";
+import { View } from "./view.entity";
+import { AddViewDto } from "./dto/add-view.dto";
 
 @Injectable()
 export class ViewsService {
@@ -13,7 +13,7 @@ export class ViewsService {
 
   async add(addViewDto: AddViewDto) {
     if (!addViewDto.post_id || !addViewDto.localeDateString)
-      throw new HttpException('bad request', HttpStatus.BAD_REQUEST);
+      throw new HttpException("bad request", HttpStatus.BAD_REQUEST);
 
     const view = await this.viewsRepository.findOne({
       where: {
