@@ -4,11 +4,12 @@ import {
   forwardRef,
   HttpStatus,
   HttpException,
-} from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
-import { Category } from './category.entity';
-import { PostsService } from 'src/posts/posts.service';
+} from "@nestjs/common";
+import { InjectRepository } from "@nestjs/typeorm";
+import { Repository } from "typeorm";
+import { Category } from "./category.entity";
+import { PostsService } from "src/posts/posts.service";
+import { convertDateDBToClient } from "src/module/dateConverter";
 
 @Injectable()
 export class CategoriesService {
@@ -24,7 +25,7 @@ export class CategoriesService {
     const parentCategories = await this.categoriesRepository.find({
       select: { id: true, name: true },
       where: { public: 1, parent_category_id: 0 },
-      order: { priority: 'ASC' },
+      order: { priority: "ASC" },
     });
 
     return await Promise.all(
@@ -33,7 +34,7 @@ export class CategoriesService {
         item.children = await this.categoriesRepository.find({
           select: { id: true, name: true },
           where: { public: 1, parent_category_id: parentCategory.id },
-          order: { priority: 'ASC' },
+          order: { priority: "ASC" },
         });
         return item;
       }),
@@ -43,10 +44,9 @@ export class CategoriesService {
   async getById(id: number) {
     const category = await this.categoriesRepository.findOne({
       select: { name: true, parent_category_id: true },
-      where: { id: id },
+      where: { id: id, public: 1 },
     });
-    if (!category || category?.public === 0)
-      throw new HttpException('no category', HttpStatus.NOT_FOUND);
+    if (!category) throw new HttpException("no category", HttpStatus.NOT_FOUND);
 
     if (category.parent_category_id === 0) return category.name;
     else {
@@ -59,11 +59,11 @@ export class CategoriesService {
   }
 
   async getPosts(id: number) {
+    const categoriesId: number[] = [Number(id)];
+
     const childrenCategories = await this.categoriesRepository.findBy({
       parent_category_id: id,
     });
-
-    const categoriesId: number[] = [Number(id)];
     childrenCategories.forEach((childCategory) => {
       categoriesId.push(childCategory.id);
     });
@@ -71,9 +71,7 @@ export class CategoriesService {
     const posts = await this.postsService.getByCategoryIds(categoriesId);
 
     return posts.map((post) => {
-      const created_at: string = new Date(post.created_at)
-        .toISOString()
-        .split('T')[0];
+      const created_at: string = convertDateDBToClient(post.created_at);
       return { ...post, created_at };
     });
   }

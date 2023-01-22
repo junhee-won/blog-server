@@ -1,4 +1,4 @@
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity()
 export class Category {
@@ -20,6 +20,7 @@ export class Category {
   @Column()
   parent_category_id: number;
 
+  // 1: true, 0: false
   @Column()
-  public: number;
+  public: 1 | 0;
 }
