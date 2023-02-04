@@ -12,6 +12,7 @@ import { CategoriesService } from "src/categories/categories.service";
 import { PostSummary } from "./post.interface";
 import { PostPage } from "./post.interface";
 import { convertDateDBToClient } from "src/module/dateConverter";
+import { Category } from "src/categories/category.entity";
 
 @Injectable()
 export class PostsService {
@@ -61,11 +62,10 @@ export class PostsService {
 
     const _posts = await Promise.all(
       posts.map(async (post) => {
-        const category: string = await this.categoriesService.getById(
-          post.category_id,
-        );
+        const categoryTree: Category[] =
+          await this.categoriesService.getTreeById(post.category_id);
         const created_at: string = convertDateDBToClient(post.created_at);
-        const _post: PostSummary = { ...post, category, created_at };
+        const _post: PostSummary = { ...post, categoryTree, created_at };
         return _post;
       }),
     );

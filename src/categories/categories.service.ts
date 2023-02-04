@@ -41,6 +41,23 @@ export class CategoriesService {
     );
   }
 
+  async getTreeById(id: number) {
+    const category = await this.categoriesRepository.findOne({
+      select: { name: true, parent_category_id: true, id: true },
+      where: { id: id, public: 1 },
+    });
+    if (!category) throw new HttpException("no category", HttpStatus.NOT_FOUND);
+
+    if (category.parent_category_id === 0) return [category];
+    else {
+      const parentCategory = await this.categoriesRepository.findOne({
+        select: { name: true, id: true },
+        where: { id: category.parent_category_id },
+      });
+      return [parentCategory, category];
+    }
+  }
+
   async getById(id: number) {
     const category = await this.categoriesRepository.findOne({
       select: { name: true, parent_category_id: true },

@@ -1,8 +1,10 @@
+import { Category } from "src/categories/category.entity";
+
 export interface PostSummary {
   id: number;
   title: string;
   thumbnail: string;
-  category: string;
+  categoryTree: Category[];
   created_at: string;
 }
 
