@@ -41,6 +41,18 @@ export class CategoriesService {
     );
   }
 
+  async getAllForSitemap() {
+    const categories = await this.categoriesRepository.find({
+      select: {
+        id: true,
+        updated_at: true,
+      },
+      where: { public: 1 },
+      order: { id: "DESC" },
+    });
+    return categories;
+  }
+
   async getTreeById(id: number) {
     const category = await this.categoriesRepository.findOne({
       select: { name: true, parent_category_id: true, id: true },

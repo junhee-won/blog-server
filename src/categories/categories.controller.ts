@@ -16,4 +16,9 @@ export class CategoriesController {
     const posts = await this.categoriesService.getPosts(id);
     return { category, posts };
   }
+
+  @Get("all/map")
+  async getAllForSitemap() {
+    return await this.categoriesService.getAllForSitemap();
+  }
 }
