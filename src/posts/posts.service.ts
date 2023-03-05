@@ -31,6 +31,7 @@ export class PostsService {
         title: true,
         content: true,
         category_id: true,
+        thumbnail: true,
       },
       where: {
         id: id,
