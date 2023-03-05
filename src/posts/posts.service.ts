@@ -76,9 +76,10 @@ export class PostsService {
     const posts = await this.postsRepository.find({
       select: {
         id: true,
+        updated_at: true,
       },
       where: { public: 1 },
-      order: { created_at: "DESC", id: "DESC" },
+      order: { id: "DESC" },
     });
     return posts;
   }
