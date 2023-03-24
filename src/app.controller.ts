@@ -20,7 +20,7 @@ export class AppController {
 
   @UseGuards(JwtAuthGuard)
   @Get("validate")
-  async validate(@Request() req) {
+  async validate() {
     return { validate: "success" };
   }
 }
