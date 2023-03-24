@@ -1,4 +1,5 @@
-import { Controller, Body, Get, Post } from "@nestjs/common";
+import { Controller, Body, Get, Post, UseGuards } from "@nestjs/common";
+import { JwtAuthGuard } from "../auth/jwt-auth.guard";
 import { ViewsService } from "./views.service";
 import { AddViewDto } from "./dto/add-view.dto";
 
@@ -11,6 +12,7 @@ export class ViewsController {
     return await this.viewsService.add(AddViewDto);
   }
 
+  @UseGuards(JwtAuthGuard)
   @Get()
   async getLast7Days() {
     return await this.viewsService.getLast7Days();
