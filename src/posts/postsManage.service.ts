@@ -18,8 +18,12 @@ export class PostsManageService {
       throw new HttpException("no title", HttpStatus.BAD_REQUEST);
     if (!createPostDto.content)
       throw new HttpException("no content", HttpStatus.BAD_REQUEST);
-    if (createPostDto.public !== 0 && createPostDto.public !== 1)
-      throw new HttpException("no public", HttpStatus.BAD_REQUEST);
+    if (
+      createPostDto.public !== 0 &&
+      createPostDto.public !== 1 &&
+      createPostDto.public !== 2
+    )
+      throw new HttpException("no visbility", HttpStatus.BAD_REQUEST);
     if (!createPostDto.category_id)
       throw new HttpException("no category_id", HttpStatus.BAD_REQUEST);
 
