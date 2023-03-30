@@ -1,4 +1,12 @@
-import { Controller, UseGuards, Body, Get, Post, Put } from "@nestjs/common";
+import {
+  Controller,
+  UseGuards,
+  Body,
+  Get,
+  Post,
+  Put,
+  Query,
+} from "@nestjs/common";
 import { JwtAuthGuard } from "../auth/jwt-auth.guard";
 import { PostsManageService } from "./postsManage.service";
 import { CreatePostDto } from "./dto/create-post.dto";
@@ -16,8 +24,10 @@ export class PostsManageController {
 
   @UseGuards(JwtAuthGuard)
   @Get("all")
-  async getAll() {
-    return await this.postsManageService.getAll();
+  async getAll(
+    @Query("visibility") visibility: "draft" | "public" | "private",
+  ) {
+    return await this.postsManageService.getAll(visibility);
   }
 
   @UseGuards(JwtAuthGuard)

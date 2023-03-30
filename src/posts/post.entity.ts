@@ -17,8 +17,13 @@ export class Post {
   @Column()
   content: string;
 
+  /*
+  2: 임시저장(draft)
+  1: 공개(public)
+  0: 비공개(private)
+  */
   @Column()
-  public: 1 | 0;
+  public: 2 | 1 | 0;
 
   @Column()
   category_id: number;

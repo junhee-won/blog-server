@@ -36,8 +36,20 @@ export class PostsManageService {
     }
   }
 
-  async getAll() {
-    return await this.postsRepository.find();
+  async getAll(visibility: "draft" | "public" | "private") {
+    let publicNumber: 0 | 1 | 2;
+    if (visibility === "draft") {
+      publicNumber = 2;
+    } else if (visibility === "public") {
+      publicNumber = 1;
+    } else {
+      publicNumber = 0;
+    }
+    const posts = await this.postsRepository.find({
+      where: { public: publicNumber },
+      order: { id: "DESC" },
+    });
+    return posts;
   }
 
   async update(updatePostDto: UpdatePostDto) {
