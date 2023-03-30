@@ -70,10 +70,13 @@ export class PostsManageService {
 
     try {
       const currentTime = createDateDB();
-      return await this.postsRepository.save({
-        ..._post,
-        updated_at: currentTime,
-      });
+      if (_post.public === 1) {
+        _post.created_at = currentTime;
+        _post.updated_at = currentTime;
+      } else {
+        _post.updated_at = currentTime;
+      }
+      return await this.postsRepository.save(_post);
     } catch (error) {
       throw error;
     }
