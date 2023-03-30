@@ -63,7 +63,7 @@ export class PostsManageService {
     if (
       !_post.title ||
       !_post.content ||
-      (_post.public !== 0 && _post.public !== 1) ||
+      (_post.public !== 0 && _post.public !== 1 && _post.public !== 2) ||
       !_post.category_id
     )
       throw new HttpException("no post", HttpStatus.BAD_REQUEST);

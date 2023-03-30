@@ -61,14 +61,18 @@ export class PostsService {
 
     const _posts = await Promise.all(
       posts.map(async (post) => {
-        const categoryTree: Category[] =
-          await this.categoriesService.getTreeById(post.category_id);
-        const created_at: string = convertDateDBToClient(post.created_at);
-        const _post: PostSummary = { ...post, categoryTree, created_at };
-        return _post;
+        try {
+          const categoryTree: Category[] =
+            await this.categoriesService.getTreeById(post.category_id);
+          const created_at: string = convertDateDBToClient(post.created_at);
+          const _post: PostSummary = { ...post, categoryTree, created_at };
+          return _post;
+        } catch (e) {
+          return null;
+        }
       }),
     );
-    return _posts;
+    return _posts.filter((item) => item !== null);
   }
 
   async getAll() {
