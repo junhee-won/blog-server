@@ -58,7 +58,6 @@ export class PostsService {
       where: { public: 1 },
       order: { created_at: "DESC", id: "DESC" },
     });
-    posts.splice(6);
 
     const _posts = await Promise.all(
       posts.map(async (post) => {
