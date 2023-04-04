@@ -1,8 +1,9 @@
 export class UpdatePostDto {
-  id: number;
+  id?: number;
   title?: string;
   content?: string;
-  public?: 1 | 0;
+  public?: 2 | 1 | 0;
   category_id?: number;
-  thumbnail: string;
+  thumbnail?: string;
+  action: "publish" | "save";
 }
