@@ -23,4 +23,10 @@ export class Category {
   // 1: true, 0: false
   @Column()
   public?: 1 | 0;
+
+  @Column()
+  description?: string;
+
+  @Column()
+  thumbnail?: string;
 }
