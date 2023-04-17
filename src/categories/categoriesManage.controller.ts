@@ -12,8 +12,8 @@ export class CategoriesManageController {
 
   @UseGuards(JwtAuthGuard)
   @Post()
-  async create(@Body() createCategoryDto: CreateCategoryDto) {
-    return await this.categoriessManageService.create(createCategoryDto);
+  async create() {
+    return await this.categoriessManageService.create();
   }
 
   @UseGuards(JwtAuthGuard)

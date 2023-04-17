@@ -13,13 +13,17 @@ export class CategoriesManageService {
     private categoriesRepository: Repository<Category>,
   ) {}
 
-  async create(createCategoryDto: CreateCategoryDto) {
-    if (!createCategoryDto.name)
-      throw new HttpException("no name", HttpStatus.BAD_REQUEST);
+  async create() {
+    // if (!createCategoryDto.name)
+    //   throw new HttpException("no name", HttpStatus.BAD_REQUEST);
     try {
       const currentTime = createDateDB();
-      const cateogry = {
-        ...createCategoryDto,
+      const cateogry: Category = {
+        // ...createCategoryDto,
+        name: "이름",
+        description: "설명",
+        public: 0,
+        priority: 99,
         created_at: currentTime,
         updated_at: currentTime,
       };
