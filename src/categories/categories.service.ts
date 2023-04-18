@@ -22,23 +22,11 @@ export class CategoriesService {
   ) {}
 
   async getAll() {
-    const parentCategories = await this.categoriesRepository.find({
-      select: { id: true, name: true },
-      where: { public: 1, parent_category_id: 0 },
+    return await this.categoriesRepository.find({
+      select: { id: true, name: true, description: true, thumbnail: true },
+      where: { public: 1 },
       order: { priority: "ASC" },
     });
-
-    return await Promise.all(
-      parentCategories.map(async (parentCategory) => {
-        const item = { ...parentCategory, children: [] };
-        item.children = await this.categoriesRepository.find({
-          select: { id: true, name: true },
-          where: { public: 1, parent_category_id: parentCategory.id },
-          order: { priority: "ASC" },
-        });
-        return item;
-      }),
-    );
   }
 
   async getAllForSitemap() {
