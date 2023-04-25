@@ -77,14 +77,13 @@ export class PostsService {
 
   async getAll() {
     const posts = await this.postsRepository.find({
-      select: {
-        id: true,
-        updated_at: true,
-      },
       where: { public: 1 },
       order: { id: "DESC" },
     });
-    return posts;
+    return posts.map((post) => {
+      const category_id = Number(post.category_id);
+      return { ...post, category_id: category_id };
+    });
   }
 
   async getByCategoryIds(categoryIds: number[]) {
