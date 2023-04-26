@@ -42,8 +42,7 @@ export class PostsService {
 
     const category = await this.categoriesService.getById(post.category_id);
     const created_at = convertDateDBToClient(post.created_at);
-    const postPage: PostPage = { ...post, created_at, category };
-    return postPage;
+    return { ...post, created_at, category };
   }
 
   async getNew() {

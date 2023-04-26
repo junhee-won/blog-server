@@ -60,19 +60,11 @@ export class CategoriesService {
 
   async getById(id: number) {
     const category = await this.categoriesRepository.findOne({
-      select: { name: true, parent_category_id: true },
+      select: { name: true },
       where: { id: id, public: 1 },
     });
     if (!category) throw new HttpException("no category", HttpStatus.NOT_FOUND);
-
-    if (category.parent_category_id === 0) return category.name;
-    else {
-      const parentCategory = await this.categoriesRepository.findOne({
-        select: { name: true },
-        where: { id: category.parent_category_id },
-      });
-      return `${parentCategory.name} / ${category.name}`;
-    }
+    return category.name;
   }
 
   async getPosts(id: number) {
