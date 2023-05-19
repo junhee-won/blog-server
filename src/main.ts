@@ -17,6 +17,6 @@ async function bootstrap() {
     origin: process.env.CORS_ORIGIN,
     methods: ["GET", "POST", "PUT"],
   });
-  await app.listen(3000);
+  await app.listen(8000);
 }
 bootstrap();
